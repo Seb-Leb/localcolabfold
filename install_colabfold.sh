@@ -1,3 +1,7 @@
+CURRENTPATH=`pwd`
+COLABFOLDDIR="${CURRENTPATH}/colabfold"
+PARAMS_DIR="${COLABFOLDDIR}/alphafold/data/params"
+MSATOOLS="${COLABFOLDDIR}/tools"
 
 echo "Creating conda environments with python3.7 as ${COLABFOLDDIR}/colabfold-conda"
 . "${COLABFOLDDIR}/conda/etc/profile.d/conda.sh"
