@@ -43,16 +43,11 @@ echo "Downloading AlphaFold2 trained parameters..."
 mkdir -p ${PARAMS_DIR}
 curl -fL ${SOURCE_URL} | tar x -C ${PARAMS_DIR}
 
-# echo "installing HH-suite 3.3.0..."
-# mkdir -p ${MSATOOLS}
-# git clone --branch v3.3.0 https://github.com/soedinglab/hh-suite.git hh-suite-3.3.0
-# (cd hh-suite-3.3.0 ; mkdir build ; cd build ; cmake -DCMAKE_INSTALL_PREFIX=${MSATOOLS}/hh-suite .. ; make -j4 ; make install)
-# rm -rf hh-suite-3.3.0
-
-# echo "installing HMMER 3.3.2..."
-# wget http://eddylab.org/software/hmmer/hmmer-3.3.2.tar.gz
-# (tar xzvf hmmer-3.3.2.tar.gz ; cd hmmer-3.3.2 ; ./configure --prefix=${MSATOOLS}/hmmer ; make -j4 ; make install)
-# rm -rf hmmer-3.3.2.tar.gz hmmer-3.3.2
+# Downloading stereo_chemical_props.txt from https://git.scicore.unibas.ch/schwede/openstructure
+echo "Downloading stereo_chemical_props.txt..."
+wget -q https://git.scicore.unibas.ch/schwede/openstructure/-/raw/7102c63615b64735c4941278d92b554ec94415f8/modules/mol/alg/src/stereo_chemical_props.txt
+mkdir -p ${COLABFOLDDIR}/alphafold/common
+mv stereo_chemical_props.txt ${COLABFOLDDIR}/alphafold/common
 
 # Install Miniconda3 for Linux
 echo "Installing Miniconda3 for Linux..."
@@ -61,36 +56,3 @@ wget -q -P . https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.
 bash ./Miniconda3-latest-Linux-x86_64.sh -b -p ${COLABFOLDDIR}/conda
 rm Miniconda3-latest-Linux-x86_64.sh
 cd ..
-
-echo "Creating conda environments with python3.7 as ${COLABFOLDDIR}/colabfold-conda"
-. "${COLABFOLDDIR}/conda/etc/profile.d/conda.sh"
-export PATH="${COLABFOLDDIR}/conda/condabin:${PATH}"
-conda create -p $COLABFOLDDIR/colabfold-conda python=3.7 -y
-conda activate $COLABFOLDDIR/colabfold-conda
-conda update -y conda
-
-echo "Installing conda-forge packages"
-conda install -c conda-forge python=3.7 cudnn==8.2.1.32 cudatoolkit==11.1.1 openmm==7.5.1 pdbfixer -y
-echo "Installing alphafold dependencies by pip"
-python3.7 -m pip install absl-py==0.13.0 biopython==1.79 chex==0.0.7 dm-haiku==0.0.4 dm-tree==0.1.6 immutabledict==2.0.0 jax==0.2.14 ml-collections==0.1.0 numpy==1.19.5 scipy==1.7.0 tensorflow-gpu==2.5.0
-python3.7 -m pip install jupyter matplotlib py3Dmol tqdm
-python3.7 -m pip install --upgrade jax jaxlib==0.1.69+cuda111 -f https://storage.googleapis.com/jax-releases/jax_releases.html
-
-# Downloading stereo_chemical_props.txt from https://git.scicore.unibas.ch/schwede/openstructure
-echo "Downloading stereo_chemical_props.txt..."
-wget -q https://git.scicore.unibas.ch/schwede/openstructure/-/raw/7102c63615b64735c4941278d92b554ec94415f8/modules/mol/alg/src/stereo_chemical_props.txt
-mkdir -p ${COLABFOLDDIR}/alphafold/common
-mv stereo_chemical_props.txt ${COLABFOLDDIR}/alphafold/common
-
-# Apply OpenMM patch.
-echo "Applying OpenMM patch..."
-(cd ${COLABFOLDDIR}/colabfold-conda/lib/python3.7/site-packages/ && patch -p0 < ${COLABFOLDDIR}/docker/openmm.patch)
-
-# Enable GPU-accelerated relaxation.
-echo "Enable GPU-accelerated relaxation..."
-(cd ${COLABFOLDDIR} && patch -u alphafold/relax/amber_minimize.py -i gpurelaxation.patch)
-
-echo "Downloading runner.py"
-(cd ${COLABFOLDDIR} && wget -q "https://raw.githubusercontent.com/YoshitakaMo/localcolabfold/main/runner.py")
-
-echo "Installation of Alphafold2_advanced finished."
