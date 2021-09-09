@@ -56,7 +56,7 @@ wget -q -P . https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.
 bash ./Miniconda3-latest-Linux-x86_64.sh -b -p ${COLABFOLDDIR}/conda
 rm Miniconda3-latest-Linux-x86_64.sh
 cd ..
-
+eval "$(command conda 'shell.bash' 'hook' 2> /dev/null)"
 echo "Creating conda environments with python3.7 as ${COLABFOLDDIR}/colabfold-conda"
 . "${COLABFOLDDIR}/conda/etc/profile.d/conda.sh"
 export PATH="${COLABFOLDDIR}/conda/condabin:${PATH}"
