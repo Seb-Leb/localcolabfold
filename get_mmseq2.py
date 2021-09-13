@@ -246,7 +246,7 @@ else:
 # save MSA as pickle
 pickle.dump({"msas":msas,"deletion_matrices":deletion_matrices},
             open(os.path.join(output_dir,"msa.pickle"),"wb"))
-pickle.dump({"seqs":seqs, "homooligomers":homooligomers, 'full_sequence':full_sequence},
+pickle.dump({"seqs":seqs, "homooligomers":homooligomers, 'full_sequence':full_sequence, 'ori_sequence':ori_sequence},
             open(os.path.join(output_dir,"seqs_oligos.pickle"),"wb"))
 
 #########################################
