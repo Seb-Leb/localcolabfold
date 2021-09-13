@@ -33,6 +33,7 @@ from alphafold.common import protein
 
 output_dir = "prediction_GAPDH_70b7d"
 msas_dict = pickle.load(open(os.path.join(output_dir,"msa.pickle"),"rb"))
+seqs = pickle.load(open(os.path.join(output_dir,"seqs.pickle"),"rb"))
 msas = msas_dict['msas']
 deletion_matrices = msas_dict['deletion_matrices']
 
