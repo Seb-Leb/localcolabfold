@@ -30,6 +30,7 @@ from alphafold.data.tools import jackhmmer
 
 from alphafold.common import protein
 
+TQDM_BAR_FORMAT = '{l_bar}{bar}| {n_fmt}/{total_fmt} [elapsed: {elapsed} remaining: {remaining}]'
 
 output_dir = "prediction_GAPDH_70b7d"
 
