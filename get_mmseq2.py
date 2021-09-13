@@ -29,7 +29,7 @@ jobname = "GAPDH" #@param {type:"string"}
 jobname = re.sub(r'\W+', '', jobname)
 
 # define number of copies
-homooligomer =  "4" #@param {type:"string"}
+homooligomer =  "2" #@param {type:"string"}
 homooligomer = re.sub("[:/]+",":",homooligomer)
 if len(homooligomer) == 0: homooligomer = "1"
 homooligomer = re.sub("[^0-9:]", "", homooligomer)
