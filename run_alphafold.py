@@ -34,10 +34,10 @@ TQDM_BAR_FORMAT = '{l_bar}{bar}| {n_fmt}/{total_fmt} [elapsed: {elapsed} remaini
 device="gpu"
 output_dir = "prediction_GAPDH_70b7d"
 
-seqs_oligos = pickle.load(open(os.path.join(output_dir,"seqs_oligos.pickle"),"rb"))
+seqs_oligos = pickle.load(open(os.path.join('./',output_dir,"seqs_oligos.pickle"),"rb"))
 seqs, homooligomers, full_sequence, ori_sequence = (seqs_oligos[k] for k in ['seqs', 'homooligomers', 'full_sequence', 'ori_sequence'])
 
-msas_dict = pickle.load(open(os.path.join(output_dir,"msa.pickle"),"rb"))
+msas_dict = pickle.load(open(os.path.join('./',output_dir,"msa.pickle"),"rb"))
 msas, deletion_matrices = (msas_dict[k] for k in ['msas', 'deletion_matrices'])
 
 #@title run alphafold
