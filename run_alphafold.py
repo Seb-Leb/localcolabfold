@@ -32,10 +32,12 @@ from alphafold.common import protein
 
 
 output_dir = "prediction_GAPDH_70b7d"
+
+seqs_oligos = pickle.load(open(os.path.join(output_dir,"seqs_oligos.pickle"),"rb"))
+seqs, homooligomers = (seqs_oligos[k] for k in ['seqs', 'homooligomers'])
+
 msas_dict = pickle.load(open(os.path.join(output_dir,"msa.pickle"),"rb"))
-seqs = pickle.load(open(os.path.join(output_dir,"seqs.pickle"),"rb"))
-msas = msas_dict['msas']
-deletion_matrices = msas_dict['deletion_matrices']
+msas, deletion_matrices = (msas_dict[k] for k in ['msas', 'deletion_matrices'])
 
 #@title run alphafold
 num_relax = "None"
