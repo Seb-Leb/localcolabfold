@@ -1,3 +1,38 @@
+import os
+import tensorflow as tf
+tf.config.set_visible_devices([], 'GPU')
+
+import jax
+
+from IPython.utils import io
+import subprocess
+import tqdm.notebook
+import colabfold as cf
+import pairmsa
+import sys
+import pickle
+
+from urllib import request
+from concurrent import futures
+import json
+from matplotlib import gridspec
+import matplotlib.pyplot as plt
+import numpy as np
+import py3Dmol
+
+from alphafold.model import model
+from alphafold.model import config
+from alphafold.model import data
+
+from alphafold.data import parsers
+from alphafold.data import pipeline
+from alphafold.data.tools import jackhmmer
+
+from alphafold.common import protein
+
+
+output_dir = "./"
+
 
 #@title run alphafold
 num_relax = "None"
@@ -5,7 +40,6 @@ rank_by = "pLDDT" #@param ["pLDDT","pTMscore"]
 use_turbo = True #@param {type:"boolean"}
 max_msa = "512:1024" #@param ["512:1024", "256:512", "128:256", "64:128", "32:64"]
 max_msa_clusters, max_extra_msa = [int(x) for x in max_msa.split(":")]
-
 
 
 #@markdown - `rank_by` specify metric to use for ranking models (For protein-protein complexes, we recommend pTMscore)
