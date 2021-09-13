@@ -31,7 +31,7 @@ from alphafold.data.tools import jackhmmer
 from alphafold.common import protein
 
 TQDM_BAR_FORMAT = '{l_bar}{bar}| {n_fmt}/{total_fmt} [elapsed: {elapsed} remaining: {remaining}]'
-
+device="gpu"
 output_dir = "prediction_GAPDH_70b7d"
 
 seqs_oligos = pickle.load(open(os.path.join(output_dir,"seqs_oligos.pickle"),"rb"))
