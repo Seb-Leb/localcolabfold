@@ -32,7 +32,7 @@ from alphafold.common import protein
 
 TQDM_BAR_FORMAT = '{l_bar}{bar}| {n_fmt}/{total_fmt} [elapsed: {elapsed} remaining: {remaining}]'
 device="gpu"
-output_dir = "prediction_GAPDH_70b7d"
+output_dir = "prediction_GAPDH_54a04"
 
 seqs_oligos = pickle.load(open(os.path.join('./',output_dir,"seqs_oligos.pickle"),"rb"))
 seqs, homooligomers, full_sequence, ori_sequence = (seqs_oligos[k] for k in ['seqs', 'homooligomers', 'full_sequence', 'ori_sequence'])
