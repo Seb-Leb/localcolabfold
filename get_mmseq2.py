@@ -122,12 +122,17 @@ def run_jackhmmer(sequence, prefix):
 import re
 
 # define sequence
-sequence = 'PIAQIHILEGRSDEQKETLIREVSEAISRSLDAPLTSVRVIITEMAKGHFGIGGELASK' #@param {type:"string"}
+sequence = 'MGKVKVGVNGFGRIGRLVTRAAFNSGKVDIVAINDPFIDLNYMVYMFQYDSTHGKFHGTV\
+KAENGKLVINGNPITIFQERDPSKIKWGDAGAEYVVESTGVFTTMEKAGAHLQGGAKRVI\
+ISAPSADAPMFVMGVNHEKYDNSLKIISNASCTTNCLAPLAKVIHDNFGIVEGLMTTVHA\
+ITATQKTVDGPSGKLWRDGRGALQNIIPASTGAAKAVGKVIPELNGKLTGMAFRVPTANV\
+SVVDLTCRLEKPAKYDDIKKVVKQASEGPLKGILGYTEHQVVSSDFNSDTHSSTFDAGAG\
+IALNDHFVKLISWYDNEFGYSNRVVDLMAHMASKE' #@param {type:"string"}
 sequence = re.sub("[^A-Z:/]", "", sequence.upper())
 sequence = re.sub(":+",":",sequence)
 sequence = re.sub("/+","/",sequence)
 
-jobname = "test" #@param {type:"string"}
+jobname = "GAPDH" #@param {type:"string"}
 jobname = re.sub(r'\W+', '', jobname)
 
 # define number of copies
