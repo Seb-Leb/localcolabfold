@@ -6,6 +6,8 @@ import pairmsa
 import sys
 import pickle
 
+from alphafold.data import parsers
+
 from urllib import request
 from concurrent import futures
 import json
