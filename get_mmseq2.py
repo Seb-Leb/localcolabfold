@@ -62,7 +62,7 @@ def get_msa(sequence, jobname):
   full_sequence = "".join([s*h for s,h in zip(seqs,homooligomers)])
 
   # prediction directory
-  output_dir = 'prediction_' + jobname #+ '_' + cf.get_hash(full_sequence)[:5]
+  output_dir = 'outputs/prediction_' + jobname #+ '_' + cf.get_hash(full_sequence)[:5]
   os.makedirs(output_dir, exist_ok=True)
   # delete existing files in working directory
   for f in os.listdir(output_dir):
