@@ -33,7 +33,7 @@ from alphafold.common import protein
 import argparse
 argparser = argparse.ArgumentParser(description='run alphafold.')
 argparser.add_argument('output_dir', type=str)
-args = parser.parse_args()
+args = argparser.parse_args()
 output_dir = args.output_dir
 
 seqs_oligos = pickle.load(open(os.path.join('./',output_dir,"seqs_oligos.pickle"),"rb"))
