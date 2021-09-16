@@ -33,8 +33,8 @@ from alphafold.common import protein
 import argparse
 argparser = argparse.ArgumentParser(description='run alphafold.')
 argparser.add_argument('output_dir', type=str)
-
-output_dir = argparser.output_dir
+args = parser.parse_args()
+output_dir = args.output_dir
 
 seqs_oligos = pickle.load(open(os.path.join('./',output_dir,"seqs_oligos.pickle"),"rb"))
 seqs, homooligomers, full_sequence, ori_sequence = (seqs_oligos[k] for k in ['seqs', 'homooligomers', 'full_sequence', 'ori_sequence'])
