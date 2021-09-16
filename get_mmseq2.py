@@ -12,6 +12,8 @@ from alphafold.data import parsers
 import matplotlib.pyplot as plt
 import numpy as np
 
+from Bio import SeqIO
+
 import argparse
 argparser = argparse.ArgumentParser(description='run alphafold.')
 argparser.add_argument('fasta_file', type=str)
@@ -312,4 +314,7 @@ def get_msa(sequence, jobname):
       plt.savefig(os.path.join(output_dir,"msa_coverage.png"), bbox_inches = 'tight', dpi=200)
       # plt.show()
 
-for 
+for record in SeqIO.parse(fasta_file, 'fasta'):
+  jobname = record.description
+  sequence = str(record.seq)
+  get_msa(sequence, jobname)
