@@ -30,9 +30,11 @@ from alphafold.data.tools import jackhmmer
 
 from alphafold.common import protein
 
-TQDM_BAR_FORMAT = '{l_bar}{bar}| {n_fmt}/{total_fmt} [elapsed: {elapsed} remaining: {remaining}]'
-device="gpu"
-output_dir = "prediction_GAPDH_54a04"
+import argparse
+argparser = argparse.ArgumentParser(description='run alphafold.')
+argparser.add_argument('output_dir', type=str)
+
+output_dir = argparser.output_dir
 
 seqs_oligos = pickle.load(open(os.path.join('./',output_dir,"seqs_oligos.pickle"),"rb"))
 seqs, homooligomers, full_sequence, ori_sequence = (seqs_oligos[k] for k in ['seqs', 'homooligomers', 'full_sequence', 'ori_sequence'])
@@ -40,44 +42,28 @@ seqs, homooligomers, full_sequence, ori_sequence = (seqs_oligos[k] for k in ['se
 msas_dict = pickle.load(open(os.path.join('./',output_dir,"msa.pickle"),"rb"))
 msas, deletion_matrices = (msas_dict[k] for k in ['msas', 'deletion_matrices'])
 
-#@title run alphafold
+TQDM_BAR_FORMAT = '{l_bar}{bar}| {n_fmt}/{total_fmt} [elapsed: {elapsed} remaining: {remaining}]'
+device="gpu"
+
 num_relax = "None"
 rank_by = "pLDDT" #@param ["pLDDT","pTMscore"]
 use_turbo = True #@param {type:"boolean"}
 max_msa = "512:1024" #@param ["512:1024", "256:512", "128:256", "64:128", "32:64"]
 max_msa_clusters, max_extra_msa = [int(x) for x in max_msa.split(":")]
 
+show_images = False
 
-#@markdown - `rank_by` specify metric to use for ranking models (For protein-protein complexes, we recommend pTMscore)
-#@markdown - `use_turbo` introduces a few modifications (compile once, swap params, adjust max_msa) to speedup and reduce memory requirements. Disable for default behavior.
-#@markdown - `max_msa` defines: `max_msa_clusters:max_extra_msa` number of sequences to use. When adjusting after GPU crash, be sure to `Runtime` → `Restart runtime`. (Lowering will reduce GPU requirements, but may result in poor model quality. This option ignored if `use_turbo` is disabled)
-show_images = True #@param {type:"boolean"}
-#@markdown - `show_images` To make things more exciting we show images of the predicted structures as they are being generated. (WARNING: the order of images displayed does not reflect any ranking).
-#@markdown ---
-#@markdown #### Sampling options
-#@markdown There are two stochastic parts of the pipeline. Within the feature generation (choice of cluster centers) and within the model (dropout).
-#@markdown To get structure diversity, you can iterate through a fixed number of random_seeds (using `num_samples`) and/or enable dropout (using `is_training`).
-
-num_models = 5 #@param [1,2,3,4,5] {type:"raw"}
+num_models = 3 #@param [1,2,3,4,5] {type:"raw"}
 use_ptm = True #@param {type:"boolean"}
 num_ensemble = 1 #@param [1,8] {type:"raw"}
 max_recycles = 3 #@param [1,3,6,12,24,48] {type:"raw"}
 tol = 0 #@param [0,0.1,0.5,1] {type:"raw"}
 is_training = False #@param {type:"boolean"}
 num_samples = 1 #@param [1,2,4,8,16,32] {type:"raw"}
-#@markdown - `num_models` specify how many model params to try. (5 recommended)
-#@markdown - `use_ptm` uses Deepmind's `ptm` finetuned model parameters to get PAE per structure. Disable to use the original model params. (Disabling may give alternative structures.)
-#@markdown - `num_ensemble` the trunk of the network is run multiple times with different random choices for the MSA cluster centers. (`1`=`default`, `8`=`casp14 setting`)
-#@markdown - `max_recycles` controls the maximum number of times the structure is fed back into the neural network for refinement. (3 recommended)
-#@markdown  - `tol` tolerance for deciding when to stop (CA-RMS between recycles)
-#@markdown - `is_training` enables the stochastic part of the model (dropout), when coupled with `num_samples` can be used to "sample" a diverse set of structures.
-#@markdown - `num_samples` number of random_seeds to try.
 subsample_msa = True #@param {type:"boolean"}
-#@markdown - `subsample_msa` subsample large MSA to `3E7/length` sequences to avoid crashing the preprocessing protocol.
 
 save_pae_json = True
 save_tmp_pdb = True
-
 
 if use_ptm == False and rank_by == "pTMscore":
   print("WARNING: models will be ranked by pLDDT, 'use_ptm' is needed to compute pTMscore")
@@ -249,7 +235,6 @@ with tqdm.notebook.tqdm(total=total, bar_format=TQDM_BAR_FORMAT) as pbar:
         pdb_lines = protein.to_pdb(outs[key]["unrelaxed_protein"])
         with open(tmp_pdb_path, 'w') as f: f.write(pdb_lines)
 
-
       # cleanup
       del processed_feature_dict, prediction_result
       if subsample_msa: del sampled_feats_dict
@@ -308,7 +293,7 @@ for n,key in enumerate(model_rank):
 #%%
 #@title Refine structures with Amber-Relax (Optional)
 #@markdown If side-chain bond geometry is important to you, enable Amber-Relax by specifying how many top ranked structures you want relaxed. By default, we disable Amber-Relax since it barely moves the main-chain (backbone) structure and can overall double the runtime.
-num_relax = "Top5" #@param ["None", "Top1", "Top5", "All"] {type:"string"}
+num_relax = "None" #@param ["None", "Top1", "Top5", "All"] {type:"string"}
 if num_relax == "None":
   num_relax = 0
 elif num_relax == "Top1":
