@@ -17,10 +17,12 @@ from Bio import SeqIO
 import argparse
 argparser = argparse.ArgumentParser(description='run alphafold.')
 argparser.add_argument('fasta_file', type=str)
+argparser.add_argument('homooligomer_counts', type=str)
 args = argparser.parse_args()
 fasta_file = args.fasta_file
+homooligomer_counts = args.homooligomer_counts
 
-def get_msa(sequence, jobname):
+def get_msa(sequence, jobname, homooligomer_counts):
 
   sequence = re.sub("[^A-Z:/]", "", sequence.upper())
   sequence = re.sub(":+",":",sequence)
@@ -29,7 +31,7 @@ def get_msa(sequence, jobname):
   jobname = re.sub(r'\W+', '', jobname)
 
   # define number of copies
-  homooligomer =  "2"
+  homooligomer =  homooligomer_counts
   homooligomer = re.sub("[:/]+",":",homooligomer)
   if len(homooligomer) == 0: homooligomer = "1"
   homooligomer = re.sub("[^0-9:]", "", homooligomer)
@@ -317,4 +319,4 @@ def get_msa(sequence, jobname):
 for record in SeqIO.parse(fasta_file, 'fasta'):
   jobname = record.description
   sequence = str(record.seq)
-  get_msa(sequence, jobname)
+  get_msa(sequence, jobname, homooligomer_counts)
